@@ -1,0 +1,557 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+//import 'package:http/http.dart';
+
+Future<Album> fetchAlbum() async {
+  final response = await http.get(Uri.parse(
+      'https://api.stockedge.com/Api/SecurityDashboardApi/GetCompanyEquityInfoForSecurity/5051?lang=en'));
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return Album.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+
+class Album {
+  final String Sector;
+  final String Industry;
+  final String MCAP;
+  final String EV;
+  final String BookNavPerShare;
+  final String TTMPE;
+  final String PEGRatio;
+  final String Yield;
+
+  const Album({
+    required this.Sector,
+    required this.Industry,
+    required this.MCAP,
+    required this.EV,
+    required this.BookNavPerShare,
+    required this.TTMPE,
+    required this.PEGRatio,
+    required this.Yield,
+  });
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return Album(
+      Sector: json['Sector'],
+      Industry: json['Industry'],
+      MCAP: json['MCAP'].toString(),
+      EV: json['EV'].toString(),
+      BookNavPerShare: json['BookNavPerShare'].toString(),
+      TTMPE: json['TTMPE'].toString(),
+      PEGRatio: json['PEGRatio'].toString(),
+      Yield: json['Yield'].toString(),
+    );
+  }
+}
+
+Future<Perfor> fetchPerfor() async {
+  final response = await http.get(Uri.parse(
+      'https://api.stockedge.com/Api/SecurityDashboardApi/GetTechnicalPerformanceBenchmarkForSecurity/5051?lang=en'));
+
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return Perfor.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+
+
+
+class Perfor {
+  final String id;
+ // final String Industry;
+ // final String MCAP;
+ // final String EV;
+ // final String BookNavPerShare;
+ // final String TTMPE;
+ // final String PEGRatio;
+ // final String Yield;
+
+  const Perfor({
+    required this.id,
+    //required this.Industry,
+    //required this.MCAP,
+    //required this.EV,
+    //required this.BookNavPerShare,
+    //required this.TTMPE,
+    //required this.PEGRatio,
+    //required this.Yield,
+  });
+
+  factory Perfor.fromJson(Map<String, dynamic> json) {
+    return Perfor(
+      id: json['id'].toString(),
+     // Industry: json['Industry'],
+     // MCAP: json['MCAP'].toString(),
+     // EV: json['EV'].toString(),
+     // BookNavPerShare: json['BookNavPerShare'].toString(),
+     // TTMPE: json['TTMPE'].toString(),
+     // PEGRatio: json['PEGRatio'].toString(),
+     // Yield: json['Yield'].toString(),
+    );
+  }
+}
+
+
+
+
+
+class MyAppGet extends StatefulWidget {
+  const MyAppGet({super.key});
+
+  @override
+  State<MyAppGet> createState() => _MyAppGetState();
+}
+
+class _MyAppGetState extends State<MyAppGet> {
+  late Future<Album> futureAlbum;
+  late Future<Perfor> futurePerfor;
+   // In Dart, we use the late keyword to
+  //declare variables that will be initialized later
+
+  @override
+  void initState() {
+    super.initState();
+    futureAlbum = fetchAlbum();
+    futurePerfor =fetchPerfor();
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Fetch Data Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+            title: const Text('Fetch Data Example'),
+            centerTitle: true,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back,
+              ),
+            )),
+        body: Center(
+          child: 
+          
+          Column(
+            children: [
+              FutureBuilder<Album>(
+                future: futureAlbum,
+                
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return (MaterialApp(
+                      home: Scaffold(
+                        body: Center(
+                            child: Column(
+                          children: [
+                            //Text(snapshot.data!.Sector),
+                            //Text(snapshot.data!.Industry),
+                            //Text(snapshot.data!.MCAP),
+                            //Text(snapshot.data!.EV),
+                            //Text(snapshot.data!.BookNavPerShare),
+                            //Text(snapshot.data!.TTMPE),
+                            //
+
+                            const SizedBox(
+                              height: 90.0,
+                            ),
+                            //Text(snapshot.data!.id.toString()),
+
+                            //ListView(
+                            //  children: [
+                            //    Card(
+                            //        child: ListTile(
+                            //      leading: const Text('Sector'),
+                            //      trailing: Text(snapshot.data!.Sector),
+                            //      title: const Text('sec'),
+                            //      tileColor: Colors.red,
+                            //    ))
+                            //  ],
+                            //),
+
+                            // const ListTile(
+                            //   title: Text('text'),
+                            // ),
+                            const Text('Overview'),
+                            const SizedBox(
+                              height: 30.0,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: const BoxDecoration(color: Colors.pink),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('Sector'),
+                                const SizedBox(
+                                  width: 310.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.Sector),
+                              ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration:
+                                  const BoxDecoration(color: Colors.pinkAccent),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('Industry'),
+                                const SizedBox(
+                                  width: 300.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.Industry),
+                              ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: const BoxDecoration(color: Colors.pink),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('Market Cap'),
+                                const SizedBox(
+                                  width: 280.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.MCAP),
+                              ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration:
+                                  const BoxDecoration(color: Colors.pinkAccent),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('EnterPrise Value (EV)'),
+                                const SizedBox(
+                                  width: 220.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.EV),
+                              ]),
+                            ),
+
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: const BoxDecoration(color: Colors.pink),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('Book Value /Share'),
+                                const SizedBox(
+                                  width: 240.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.BookNavPerShare),
+                              ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration:
+                                  const BoxDecoration(color: Colors.pinkAccent),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('Price-Earning Ratio(PE)'),
+                                const SizedBox(
+                                  width: 210.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.TTMPE),
+                              ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: const BoxDecoration(color: Colors.pink),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('PEG Ratio'),
+                                const SizedBox(
+                                  width: 293.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.PEGRatio),
+                              ]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration:
+                                  const BoxDecoration(color: Colors.pinkAccent),
+                              child: Row(children: [
+                                const SizedBox(
+                                  width: 30.0,
+                                ),
+                                const Text('Dividend Yeald'),
+                                const SizedBox(
+                                  width: 263.0,
+                                ),
+                                const Icon(Icons.account_balance_outlined),
+                                Text(snapshot.data!.Yield),
+                              ]),
+                            ),
+
+                            const SizedBox(
+                              height: 90.0,
+                            ),
+                            const Text('Performance'),
+                          ],
+                        )),
+                      ),
+                    ));
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return const CircularProgressIndicator();
+                },
+              ),
+
+
+
+//               FutureBuilder<Perfor>(
+//                future: futurePerfor,
+//                
+//                builder: (context, snapshot) {
+//                  if (snapshot.hasData) {
+//                    return (MaterialApp(
+//                      home: Scaffold(
+//                        body: Center(
+//                            child: Column(
+//                          children: [
+//                            Text(snapshot.data!.id),
+//                            //Text(snapshot.data!.Industry),
+//                            //Text(snapshot.data!.MCAP),
+//                            //Text(snapshot.data!.EV),
+//                            //Text(snapshot.data!.BookNavPerShare),
+//                            //Text(snapshot.data!.TTMPE),
+//                            //
+//
+//                        //    const SizedBox(
+//                        //      height: 90.0,
+//                        //    ),
+//                        //    //Text(snapshot.data!.id.toString()),
+////
+//                        //    //ListView(
+//                        //    //  children: [
+//                        //    //    Card(
+//                        //    //        child: ListTile(
+//                        //    //      leading: const Text('Sector'),
+//                        //    //      trailing: Text(snapshot.data!.Sector),
+//                        //    //      title: const Text('sec'),
+//                        //    //      tileColor: Colors.red,
+//                        //    //    ))
+//                        //    //  ],
+//                        //    //),
+//               //
+//                        //    // const ListTile(
+//                        //    //   title: Text('text'),
+//                        //    // ),
+//                        //    const Text('Overview'),
+//                        //    const SizedBox(
+//                        //      height: 30.0,
+//                        //    ),
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration: const BoxDecoration(color: Colors.pink),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('Sector'),
+//                        //        const SizedBox(
+//                        //          width: 310.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.Sector),
+//                        //      ]),
+//                        //    ),
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration:
+//                        //          const BoxDecoration(color: Colors.pinkAccent),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('Industry'),
+//                        //        const SizedBox(
+//                        //          width: 300.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.Industry),
+//                        //      ]),
+//                        //    ),
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration: const BoxDecoration(color: Colors.pink),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('Market Cap'),
+//                        //        const SizedBox(
+//                        //          width: 280.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.MCAP),
+//                        //      ]),
+//                        //    ),
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration:
+//                        //          const BoxDecoration(color: Colors.pinkAccent),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('EnterPrise Value (EV)'),
+//                        //        const SizedBox(
+//                        //          width: 220.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.EV),
+//                        //      ]),
+//                        //    ),
+//                 //
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration: const BoxDecoration(color: Colors.pink),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('Book Value /Share'),
+//                        //        const SizedBox(
+//                        //          width: 240.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.BookNavPerShare),
+//                        //      ]),
+//                        //    ),
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration:
+//                        //          const BoxDecoration(color: Colors.pinkAccent),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('Price-Earning Ratio(PE)'),
+//                        //        const SizedBox(
+//                        //          width: 210.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.TTMPE),
+//                        //      ]),
+//                        //    ),
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration: const BoxDecoration(color: Colors.pink),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('PEG Ratio'),
+//                        //        const SizedBox(
+//                        //          width: 293.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.PEGRatio),
+//                        //      ]),
+//                        //    ),
+//                        //    Container(
+//                        //      margin: const EdgeInsets.symmetric(horizontal: 40.0),
+//                        //      padding: const EdgeInsets.symmetric(vertical: 10),
+//                        //      decoration:
+//                        //          const BoxDecoration(color: Colors.pinkAccent),
+//                        //      child: Row(children: [
+//                        //        const SizedBox(
+//                        //          width: 30.0,
+//                        //        ),
+//                        //        const Text('Dividend Yeald'),
+//                        //        const SizedBox(
+//                        //          width: 263.0,
+//                        //        ),
+//                        //        const Icon(Icons.account_balance_outlined),
+//                        //        Text(snapshot.data!.Yield),
+//                        //      ]),
+//                        //    ),
+////
+//                        //    const SizedBox(
+//                        //      height: 90.0,
+//                        //    ),
+//                        //    const Text('Performance'),
+//                          ],
+//                        )),
+//                      ),
+//                    ));
+//                  } else if (snapshot.hasError) {
+//                    return Text('${snapshot.error}');
+//                  }
+//
+//                  // By default, show a loading spinner.
+//                  return const CircularProgressIndicator();
+//                },
+//              ),
+
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
